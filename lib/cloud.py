@@ -9,13 +9,15 @@ class Cloud:
     def __init__(self, storage, server_url):
         self.storage = storage
         self.server_url = server_url
-        self.online = False  # à mettre à jour selon l'état du WiFi
 
     def is_online(self):
         return self.online
-
-    def set_online(self, status):
-        self.online = status
+    
+    @property
+    def online(self):
+        response = requests.post(f"{self.server_url}/check")
+        if response.status_code == 200:
+            return True
 
     def send_event(self, event_type, data=None):
         if self.is_online():
